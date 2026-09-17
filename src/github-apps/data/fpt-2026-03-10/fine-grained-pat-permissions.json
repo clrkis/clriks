@@ -577,6 +577,24 @@
         "access": "write"
       },
       {
+        "category": "code-scanning",
+        "slug": "get-the-ai-scan-setting-for-an-organization",
+        "subcategory": "code-scanning",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/code-scanning/ai-scan",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "code-scanning",
+        "slug": "update-the-ai-scan-setting-for-an-organization",
+        "subcategory": "code-scanning",
+        "verb": "patch",
+        "requestPath": "/orgs/{org}/code-scanning/ai-scan",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
         "category": "code-security",
         "slug": "get-code-security-configurations-for-an-organization",
         "subcategory": "configurations",
@@ -780,6 +798,24 @@
         "subcategory": "orgs",
         "verb": "delete",
         "requestPath": "/orgs/{org}/interaction-limits",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "interactions",
+        "slug": "get-pull-request-creation-cap-for-an-org",
+        "subcategory": "orgs",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/interaction-limits/pulls/creation-cap",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "interactions",
+        "slug": "update-pull-request-creation-cap-for-an-org",
+        "subcategory": "orgs",
+        "verb": "patch",
+        "requestPath": "/orgs/{org}/interaction-limits/pulls/creation-cap",
         "additional-permissions": false,
         "access": "write"
       },
@@ -3140,6 +3176,15 @@
       },
       {
         "category": "actions",
+        "slug": "get-runner-version-end-of-life-schedule-for-an-organization",
+        "subcategory": "self-hosted-runners",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/actions/runners/deprecations/{version}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "actions",
         "slug": "list-runner-applications-for-an-organization",
         "subcategory": "self-hosted-runners",
         "verb": "get",
@@ -4082,6 +4127,15 @@
       },
       {
         "category": "actions",
+        "slug": "get-runner-version-end-of-life-schedule-for-a-repository",
+        "subcategory": "self-hosted-runners",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/actions/runners/deprecations/{version}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "actions",
         "slug": "list-runner-applications-for-a-repository",
         "subcategory": "self-hosted-runners",
         "verb": "get",
@@ -4559,6 +4613,15 @@
       },
       {
         "category": "code-scanning",
+        "slug": "update-ai-scan-enablement-for-a-repository",
+        "subcategory": "code-scanning",
+        "verb": "patch",
+        "requestPath": "/repos/{owner}/{repo}/code-scanning/ai-scan",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "code-scanning",
         "slug": "get-a-code-scanning-default-setup-configuration",
         "subcategory": "code-scanning",
         "verb": "get",
@@ -4963,6 +5026,42 @@
         "access": "write"
       },
       {
+        "category": "secret-scanning",
+        "slug": "list-repository-custom-patterns",
+        "subcategory": "custom-patterns",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "secret-scanning",
+        "slug": "bulk-create-repository-custom-patterns",
+        "subcategory": "custom-patterns",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "secret-scanning",
+        "slug": "bulk-delete-repository-custom-patterns",
+        "subcategory": "custom-patterns",
+        "verb": "delete",
+        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "secret-scanning",
+        "slug": "update-a-repository-custom-pattern",
+        "subcategory": "custom-patterns",
+        "verb": "patch",
+        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns/{pattern_id}",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
         "category": "security-advisories",
         "slug": "create-a-temporary-private-fork",
         "subcategory": "repository-advisories",
@@ -5252,6 +5351,24 @@
       },
       {
         "category": "orgs",
+        "slug": "create-a-cluster-deployment-records-job",
+        "subcategory": "artifact-metadata",
+        "verb": "post",
+        "requestPath": "/orgs/{org}/artifacts/metadata/deployment-record/cluster/{cluster}/jobs",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "orgs",
+        "slug": "get-cluster-deployment-records-job-status",
+        "subcategory": "artifact-metadata",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/artifacts/metadata/deployment-record/cluster/{cluster}/jobs/{job_id}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "orgs",
         "slug": "create-artifact-metadata-storage-record",
         "subcategory": "artifact-metadata",
         "verb": "post",
@@ -5400,6 +5517,15 @@
         "subcategory": "code-scanning",
         "verb": "get",
         "requestPath": "/orgs/{org}/code-scanning/alerts",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "code-scanning",
+        "slug": "get-ai-scan-enablement-for-a-repository",
+        "subcategory": "code-scanning",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/code-scanning/ai-scan",
         "additional-permissions": false,
         "access": "read"
       },
@@ -6367,6 +6493,24 @@
         "access": "write"
       },
       {
+        "category": "pulls",
+        "slug": "merge-a-pull-request-asynchronously",
+        "subcategory": "pulls",
+        "verb": "put",
+        "requestPath": "/repos/{owner}/{repo}/pulls/{pull_number}/merge-async",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "pulls",
+        "slug": "get-the-result-of-an-asynchronous-merge",
+        "subcategory": "pulls",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/pulls/{pull_number}/merge-async/{uuid}",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
         "category": "repos",
         "slug": "get-a-repository-readme",
         "subcategory": "contents",
@@ -7283,6 +7427,33 @@
       },
       {
         "category": "issues",
+        "slug": "list-issue-suggestions",
+        "subcategory": "issues",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions",
+        "additional-permissions": true,
+        "access": "read"
+      },
+      {
+        "category": "issues",
+        "slug": "approve-an-issue-suggestion",
+        "subcategory": "issues",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions/{suggestion_id}/approve",
+        "additional-permissions": true,
+        "access": "write"
+      },
+      {
+        "category": "issues",
+        "slug": "dismiss-an-issue-suggestion",
+        "subcategory": "issues",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions/{suggestion_id}/dismiss",
+        "additional-permissions": true,
+        "access": "write"
+      },
+      {
+        "category": "issues",
         "slug": "list-timeline-events-for-an-issue",
         "subcategory": "timeline",
         "verb": "get",
@@ -7581,6 +7752,24 @@
         "subcategory": "rules",
         "verb": "get",
         "requestPath": "/repos/{owner}/{repo}/rulesets/{ruleset_id}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "activity",
+        "slug": "get-stargazer-count",
+        "subcategory": "starring",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/stargazers/count",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "activity",
+        "slug": "get-repository-star-history",
+        "subcategory": "starring",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/stargazers/history",
         "additional-permissions": false,
         "access": "read"
       },
@@ -8030,6 +8219,33 @@
       },
       {
         "category": "issues",
+        "slug": "list-issue-suggestions",
+        "subcategory": "issues",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions",
+        "additional-permissions": true,
+        "access": "read"
+      },
+      {
+        "category": "issues",
+        "slug": "approve-an-issue-suggestion",
+        "subcategory": "issues",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions/{suggestion_id}/approve",
+        "additional-permissions": true,
+        "access": "write"
+      },
+      {
+        "category": "issues",
+        "slug": "dismiss-an-issue-suggestion",
+        "subcategory": "issues",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/issues/{issue_number}/suggestions/{suggestion_id}/dismiss",
+        "additional-permissions": true,
+        "access": "write"
+      },
+      {
+        "category": "issues",
         "slug": "list-timeline-events-for-an-issue",
         "subcategory": "timeline",
         "verb": "get",
@@ -8396,6 +8612,51 @@
         "requestPath": "/repos/{owner}/{repo}/pulls/{pull_number}/update-branch",
         "additional-permissions": false,
         "access": "write"
+      },
+      {
+        "category": "pulls",
+        "slug": "list-pull-request-stacks",
+        "subcategory": "stacks",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/stacks",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "pulls",
+        "slug": "create-a-pull-request-stack",
+        "subcategory": "stacks",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/stacks",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "pulls",
+        "slug": "get-a-pull-request-stack",
+        "subcategory": "stacks",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/stacks/{stack_number}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "pulls",
+        "slug": "add-pull-requests-to-a-pull-request-stack",
+        "subcategory": "stacks",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/stacks/{stack_number}/add",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "pulls",
+        "slug": "remove-pull-requests-from-a-pull-request-stack",
+        "subcategory": "stacks",
+        "verb": "post",
+        "requestPath": "/repos/{owner}/{repo}/stacks/{stack_number}/unstack",
+        "additional-permissions": false,
+        "access": "write"
       }
     ]
   },
@@ -8525,42 +8786,6 @@
         "requestPath": "/repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
         "additional-permissions": false,
         "access": "read"
-      },
-      {
-        "category": "secret-scanning",
-        "slug": "list-repository-custom-patterns",
-        "subcategory": "custom-patterns",
-        "verb": "get",
-        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
-        "additional-permissions": false,
-        "access": "read"
-      },
-      {
-        "category": "secret-scanning",
-        "slug": "bulk-create-repository-custom-patterns",
-        "subcategory": "custom-patterns",
-        "verb": "post",
-        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
-        "additional-permissions": false,
-        "access": "write"
-      },
-      {
-        "category": "secret-scanning",
-        "slug": "bulk-delete-repository-custom-patterns",
-        "subcategory": "custom-patterns",
-        "verb": "delete",
-        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns",
-        "additional-permissions": false,
-        "access": "write"
-      },
-      {
-        "category": "secret-scanning",
-        "slug": "update-a-repository-custom-pattern",
-        "subcategory": "custom-patterns",
-        "verb": "patch",
-        "requestPath": "/repos/{owner}/{repo}/secret-scanning/custom-patterns/{pattern_id}",
-        "additional-permissions": false,
-        "access": "write"
       },
       {
         "category": "secret-scanning",

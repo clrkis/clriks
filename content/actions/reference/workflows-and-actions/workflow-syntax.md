@@ -28,6 +28,12 @@ Workflow files use YAML syntax, and must have either a `.yml` or `.yaml` file ex
 
 You must store workflow files in the `.github/workflows` directory of your repository.
 
+{% ifversion copilot %}
+
+> [!TIP]
+> Unlike traditional {% data variables.product.prodname_actions %} workflows that require you to script every decision as YAML job steps, {% data variables.copilot.github_agentic_workflows %} use YAML frontmatter for triggers and configuration, but let you describe what you want in natural-language Markdown—so you don't need to anticipate and encode every scenario in advance. For more information, see [AUTOTITLE](/copilot/how-tos/github-agentic-workflows/creating-github-agentic-workflows).
+
+{% endif %}
 ## `name`
 
 {% data reusables.actions.workflows.workflow-syntax-name %}
@@ -277,7 +283,7 @@ The value of this parameter is a string specifying the data type of the input. T
 
 {% data reusables.actions.forked-write-permission %}
 
-## How permissions are calculated for a workflow job
+### How permissions are calculated for a workflow job
 
 The permissions for the `GITHUB_TOKEN` are initially set to the default setting for the enterprise, organization, or repository. If the default is set to the restricted permissions at any of these levels then this will apply to the relevant repositories. For example, if you choose the restricted default at the organization level then all repositories in that organization will use the restricted permissions as the default. The permissions are then adjusted based on any configuration within the workflow file, first at the workflow level and then at the job level. Finally, if the workflow was triggered by a pull request event other than `pull_request_target` from a forked repository, and the **Send write tokens to workflows from pull requests** setting is not selected, the permissions are adjusted to change any write permissions to read only.
 
@@ -331,6 +337,46 @@ env:
 ## `concurrency`
 
 {% data reusables.actions.jobs.section-using-concurrency %}
+
+{% ifversion actions-cache-mode %}
+
+## `cache-mode`
+
+Use `cache-mode` to control the level of {% data variables.product.prodname_actions %} cache access that jobs in the workflow are granted. Setting `cache-mode` at the top level applies to every job in the workflow, unless a job overrides it with [`jobs.<job_id>.cache-mode`](#jobsjob_idcache-mode).
+
+Access is enforced with scoped cache tokens, so a job cannot restore or save caches beyond the mode it is granted. `cache-mode` accepts the following values.
+
+| Value | Restore caches | Save caches |
+| ----- | -------------- | ----------- |
+| `read` | Yes | No |
+| `write` | Yes | Yes |
+| `write-only` | No | Yes |
+| `none` | No | No |
+
+If you omit `cache-mode`, a `read` or `write` default is used based on the trigger type. For trigger-dependent effective defaults, see [AUTOTITLE](/actions/reference/dependency-caching-reference#defaults).
+
+> [!WARNING]
+> Explicitly declaring `cache-mode: write` or `cache-mode: write-only` on low-trust triggers can bypass the secure default read-only cache restriction and reintroduce cache-poisoning risk. For guidance and mitigations, see [AUTOTITLE](/actions/reference/dependency-caching-reference#bypassing-the-default-untrusted-trigger-cache-restriction).
+
+When a cache operation is not permitted by the effective mode, the cache step logs an informational message and continues. The job and workflow do not fail. A skipped restore is treated as a cache miss; a skipped save is simply not performed. For more information, see [AUTOTITLE](/actions/reference/dependency-caching-reference#controlling-cache-access-with-cache-mode).
+
+### Example of `cache-mode`
+
+```yaml
+cache-mode: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: {% data reusables.actions.action-checkout %}
+      - uses: {% data reusables.actions.action-cache %}
+        with:
+          path: ~/.npm
+          key: {% raw %}npm-${{ hashFiles('**/package-lock.json') }}{% endraw %}
+```
+
+{% endif %}
 
 ## `jobs`
 
@@ -401,6 +447,33 @@ env:
 ## `jobs.<job_id>.concurrency`
 
 {% data reusables.actions.jobs.section-using-concurrency-jobs %}
+
+{% ifversion actions-cache-mode %}
+
+## `jobs.<job_id>.cache-mode`
+
+Use `jobs.<job_id>.cache-mode` to set the level of {% data variables.product.prodname_actions %} cache access for a single job. A value set here overrides any workflow-level [`cache-mode`](#cache-mode) for this job only.
+
+The accepted values are `read`, `write`, `write-only`, and `none`, with the same meanings as the top-level key. If neither the job nor the workflow sets `cache-mode`, a trigger-based default applies. For more information about each value, see [`cache-mode`](#cache-mode) and [AUTOTITLE](/actions/reference/dependency-caching-reference#defaults).
+
+> [!WARNING]
+> Explicitly declaring `cache-mode: write` or `cache-mode: write-only` on low-trust triggers can bypass the secure default read-only cache restriction and reintroduce cache-poisoning risk. For guidance and mitigations, see [AUTOTITLE](/actions/reference/dependency-caching-reference#bypassing-the-default-untrusted-trigger-cache-restriction).
+
+You can also set `cache-mode` on a job that calls a reusable workflow to limit the cache access granted to the called workflow. For more information, see [AUTOTITLE](/actions/reference/workflows-and-actions/reusing-workflow-configurations#supported-keywords-for-jobs-that-call-a-reusable-workflow) and [AUTOTITLE](/actions/how-tos/reuse-automations/reuse-workflows#controlling-cache-access-in-reusable-workflows).
+
+### Example of `jobs.<job_id>.cache-mode`
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    cache-mode: write
+  test:
+    runs-on: ubuntu-latest
+    cache-mode: read
+```
+
+{% endif %}
 
 ## `jobs.<job_id>.outputs`
 
@@ -597,11 +670,42 @@ jobs:
         uses: actions/aws/ec2@main
 ```
 
+### Example: Using an action in the same repository as the workflow at the running commit (recommended)
+
+`$/path/to/action`
+
+The `$/` prefix is the self repository reference. It references an action stored in the same repository as the workflow or action that is currently running, and resolves to that repository at the running commit (the same SHA as the running workflow or action). You do not need to check out the repository first, so it is the recommended way to reference an action within its own repository.
+
+The `$/` syntax is not available in {% data variables.product.prodname_ghe_server %}.
+
+A `$/` reference must not include an `@{ref}` suffix. The ref is always the commit the running workflow or action is using, so a reference such as `$/actions/my-action@v1` is invalid.
+
+`$/` always resolves against the repository of the file it appears in, not the repository that called it. For example, if a reusable workflow in one repository is called by a workflow in another repository, a `$/` reference in the called workflow resolves to the called workflow's repository, not the calling workflow's repository. This makes `$/` reliable for action composition, where a relative `./` path would instead resolve against whatever is checked out in the caller's workspace. For using `$/` in a composite action's steps, see [AUTOTITLE](/actions/reference/workflows-and-actions/metadata-syntax#runsstepsuses).
+
+The following table compares the ways to reference an action.
+
+| Syntax | Resolves to | Recommended for |
+| ------ | ----------- | --------------- |
+| `$/path/to/action` | The same repository as the running workflow or action, at the running commit | Actions in the same repository |
+| `{owner}/{repo}@{ref}` | The specified repository at the specified ref | Actions in another repository |
+| `./path/to/action` | A path in the runner's checked-out workspace, relative to the default working directory (`{% raw %}${{ github.workspace }}{% endraw %}`) | Edge cases only |
+
+```yaml
+on: [push]
+
+jobs:
+  my_first_job:
+    runs-on: ubuntu-latest
+    steps:
+      # References an action in the same repository at the running commit
+      - uses: $/.github/actions/hello-world-action
+```
+
 ### Example: Using an action in the same repository as the workflow
 
 `./path/to/dir`
 
-The path to the directory that contains the action in your workflow's repository. You must check out your repository before using the action.
+The path to the directory that contains the action in your workflow's repository. You must check out your repository before using the action, and the `./` path resolves against the runner's workspace rather than the repository of the running workflow. For most cases, use the `$/` syntax shown above instead.
 
 {% data reusables.actions.workflows.section-referencing-an-action-from-the-same-repository %}
 

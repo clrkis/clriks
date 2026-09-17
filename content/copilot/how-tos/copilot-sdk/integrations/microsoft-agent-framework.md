@@ -33,7 +33,7 @@ The Microsoft Agent Framework is the unified successor to Semantic Kernel and Au
 
 Before you begin, ensure you have:
 
-* A working [AUTOTITLE](/copilot/how-tos/copilot-sdk/getting-started) in your language of choice
+* A working [AUTOTITLE](/copilot/get-started/sdk-quickstart) in your language of choice
 * A GitHub Copilot subscription (Individual, Business, or Enterprise)
 * The Copilot CLI installed or available via the SDK's bundled CLI
 
@@ -217,13 +217,19 @@ You can also use Copilot SDK's native tool definition alongside MAF tools:
 {% codetab typescript %}
 
 ```typescript
-import { CopilotClient, DefineTool } from "@github/copilot-sdk";
+import { CopilotClient, defineTool } from "@github/copilot-sdk";
 
-const getWeather = DefineTool({
-    name: "GetWeather",
+const getWeather = defineTool("GetWeather", {
     description: "Get the current weather for a given location.",
-    parameters: { location: { type: "string", description: "City name" } },
-    execute: async ({ location }) => `The weather in ${location} is sunny, 25°C.`,
+    parameters: {
+        type: "object",
+        properties: {
+            location: { type: "string", description: "City name" },
+        },
+        required: ["location"],
+    },
+    handler: async ({ location }: { location: string }) =>
+        `The weather in ${location} is sunny, 25°C.`,
 });
 
 const client = new CopilotClient();
@@ -536,7 +542,7 @@ const session = await client.createSession({
 });
 
 session.on("assistant.message_delta", (event) => {
-    process.stdout.write(event.data.delta ?? "");
+    process.stdout.write(event.data.deltaContent ?? "");
 });
 
 await session.sendAndWait({ prompt: "Write a quicksort implementation in TypeScript" });
@@ -587,7 +593,7 @@ client.stop().get();
 
 ### Copilot SDK options (passed through)
 
-All standard [AUTOTITLE](/copilot/how-tos/copilot-sdk/getting-started) options are still available when creating the underlying Copilot client. The MAF wrapper delegates to the SDK under the hood:
+All standard [AUTOTITLE](/copilot/get-started/sdk-quickstart) options are still available when creating the underlying Copilot client. The MAF wrapper delegates to the SDK under the hood:
 
 | SDK Feature | MAF Support |
 |-------------|-------------|
@@ -655,7 +661,7 @@ catch (AgentException ex)
 
 ## See also
 
-* [AUTOTITLE](/copilot/how-tos/copilot-sdk/getting-started): initial Copilot SDK setup
+* [AUTOTITLE](/copilot/get-started/sdk-quickstart): initial Copilot SDK setup
 * [AUTOTITLE](/copilot/how-tos/copilot-sdk/features/custom-agents): define specialized sub-agents within the SDK
 * [AUTOTITLE](/copilot/how-tos/copilot-sdk/features/skills): reusable prompt modules
 * [Microsoft Agent Framework documentation](https://learn.microsoft.com/en-us/agent-framework/agents/providers/github-copilot): official MAF docs for the Copilot provider
